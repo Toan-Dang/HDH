@@ -5,6 +5,7 @@
 using namespace std;
 int main() {
     int n, a, b, flag(0);
+    int c_0 = 0;
     cout << "Nhap so luong Process: ";
     cin >> n;
     vector<tuple<int, int, int>> p;
@@ -12,6 +13,9 @@ int main() {
         cout << "Nhap Arrival time va Burst time cua process thu " << i << ": ";
         cin >> a >> b;
         int c = i;
+        if (a == 0) {
+            ++c_0;
+        }
         p.push_back({b, a, c});
     }
     int m = n;
@@ -20,7 +24,7 @@ int main() {
     // if arrival time = 0 then push into queue
     // else push the Shortest Remaining Time First
     for (int i = 0; i < n; i++) {
-        if (get<1>(p[i]) == 0) {
+        if (get<1>(p[i]) == 0 && c_0 == 1) {
             q.push(p[i]);
             p.erase(p.begin() + i);
             --i;
@@ -65,13 +69,13 @@ int main() {
         cout << get<2>(it) << "\t" << get<0>(it) << "\n";
     }
     cout << "Process name\tresponse time\twaiting time\tturnaround time \n";
-    for (int i = 1; i <= n; ++i) {
+    for (int i = 1; i <= m; ++i) {
         for (const auto& it : res) {
             if (get<2>(it) == i)
                 cout << get<2>(it) << "\t" << get<3>(it) << "\t" << get<4>(it) << "\t" << get<5>(it) << "\n";
         }
     }
-    cout << "average waiting time: " << average_waiting_time / n
-         << "\naverageturnaround time: " << average_turnaround_time / n;
+    cout << "average waiting time: " << average_waiting_time / m
+         << "\naverageturnaround time: " << average_turnaround_time / m;
     return 0;
 }
