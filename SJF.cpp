@@ -4,78 +4,57 @@
 #include <tuple>
 using namespace std;
 int main() {
-    int n, a, b, flag(0);
-    int c_0 = 0;
-    cout << "Nhap so luong Process: ";
+    int n;
+    cout << "Nhap so luong process: ";
     cin >> n;
-    vector<tuple<int, int, int>> p;
-    for (int i = 1; i <= n; i++) {
-        cout << "Nhap Arrival time va Burst time cua process thu " << i << ": ";
-        cin >> a >> b;
-        int c = i;
-        if (a == 0) {
-            ++c_0;
-        }
-        p.push_back({b, a, c});
-    }
-    int m = n;
-    queue<tuple<int, int, int>> q;
-    vector<tuple<int, int, int, int, int, int>> res(n);
-    // if arrival time = 0 then push into queue
-    // else push the Shortest Remaining Time First
-    for (int i = 0; i < n; i++) {
-        if (get<1>(p[i]) == 0 && c_0 == 1) {
-            q.push(p[i]);
-            p.erase(p.begin() + i);
-            --i;
-            --n;
-        } else {
-            if (flag == 0) {
-                sort(p.begin(), p.end());
-                flag = 1;
-            }
-            q.push(p[i]);
-        }
-    }
+    int a, b, count(0), m_time(0);
+    vector<tuple<int, int, int>> p, res(n);
+    vector<int> x(n);
+    queue<pair<int, int>> q;
     double average_waiting_time(0), average_turnaround_time(0);
-    /////////////////////////////////////////////////////////////////////////////
-    //              res:                   p,q:
-    // get<0> time                  burst time
-    // get<1> arrival time          arrival time
-    // get<2> process name          number process
-    // get<3> response time,
-    // get<4> waiting time,
-    // get<5> turnaround time,
-    //////////////////////////////////////////////
-    res.push_back({0, 0, 0, 0, 0, 0});
-    for (int i = 1; i <= m; i++) {
+    //           P:                res:                      q:
+    // get<0>   burst time         completion/respond     name process
+    // get<1>   arrival time       waiting                time
+    // get<2>   name process       turnaround
+    //////////////////////////////////////////////////////////////////////
+    for (int i = 0; i < n; i++) {
+        cout << "Nhap vao arrival time va burst time cua process thu " << i << " : ";
+        cin >> a >> b;
+        m_time += b;
+        x[i] = b;
+        p.push_back({b, a, i + 1});
+    }
+    /////////////////////////////////
+    for (int time = 0; time < m_time || count < n;) {
+        int min = INT_MAX;
+        for (int i = 0; i < p.size(); i++) {
+            if (get<1>(p[i]) <= time && get<0>(p[i]) > 0 && get<0>(p[i]) < get<0>(p[min])) {
+                min = i;
+            }
+        }
+        time += get<0>(p[min]);
+        get<1>(res[min]) = time - get<1>(p[min]) - x[min];
+        get<2>(res[min]) = time - get<1>(p[min]);
+        get<0>(res[min]) = get<1>(res[min]);
+        average_waiting_time += get<1>(res[min]);
+        average_turnaround_time += get<2>(res[min]);
+        ++count;
+        get<0>(p[min]) = 0;
+        q.push({get<2>(p[min]), time});
+    }
+    //////////////////////////OUTPUT//////////////////////////////
+    cout << "\nGANTT\nProcess\tTime\n";
+    while (q.size()) {
         auto t = q.front();
-        get<0>(res[i]) = get<0>(t);
-        get<1>(res[i]) = get<1>(t);
-        get<2>(res[i]) = get<2>(t);
-
-        get<0>(res[i]) = get<0>(res[i]) + get<0>(res[i - 1]);
-        get<3>(res[i]) = get<0>(res[i - 1]) - get<1>(res[i]);
-        get<4>(res[i]) = get<3>(res[i]);
-        get<5>(res[i]) = get<0>(res[i]) - get<1>(res[i]);
-
-        average_waiting_time += get<4>(res[i]);
-        average_turnaround_time += get<5>(res[i]);
+        cout << t.first << "\t" << t.second << "\n";
         q.pop();
     }
-    /////////////////////OUT PUT//////////////////////////////
-    cout << "GANTT\nProcess name\ttime\n";
-    for (const auto& it : res) {
-        cout << get<2>(it) << "\t" << get<0>(it) << "\n";
+    cout << "\nprocess\trespond\twaiting\tturnaround\n";
+    for (int i = 0; i < n; i++) {
+        cout << i + 1 << "\t" << get<0>(res[i]) << "\t" << get<1>(res[i]) << "\t" << get<2>(res[i]) << "\n";
     }
-    cout << "Process name\tresponse time\twaiting time\tturnaround time \n";
-    for (int i = 1; i <= m; ++i) {
-        for (const auto& it : res) {
-            if (get<2>(it) == i)
-                cout << get<2>(it) << "\t" << get<3>(it) << "\t" << get<4>(it) << "\t" << get<5>(it) << "\n";
-        }
-    }
-    cout << "average waiting time: " << average_waiting_time / m
-         << "\naverageturnaround time: " << average_turnaround_time / m;
+    cout << "Average_waiting_time " << average_waiting_time / n;
+    cout << "\nAverage_turnaround_time " << average_turnaround_time / n;
+
     return 0;
 }
