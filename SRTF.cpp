@@ -13,10 +13,10 @@ int main() {
     vector<pair<int, int>> x(n, {INT_MAX, 0}), d;
     queue<pair<int, int>> q;
     double average_waiting_time(0), average_turnaround_time(0), average_respond_time(0);
-    //           P:                res:                      x:
-    // get<0>   burst time         completion/respond     respond time
-    // get<1>   arrival time       waiting                brust time
-    // get<2>   name process       turnaround
+    //           P:                res:                      x:             q,d:
+    // get<0>   burst time         completion/respond     respond time    process name
+    // get<1>   arrival time       waiting                brust time      time
+    // get<2>   process name       turnaround
     ////////////////////////////////////////////////////////////////////////
     int a, b;
     int m_time = 0;
