@@ -11,7 +11,7 @@ int main() {
     vector<tuple<int, int, int>> p, res(n);
     vector<int> x(n);
     queue<pair<int, int>> q;
-    double average_waiting_time(0), average_turnaround_time(0);
+    double average_waiting_time(0), average_turnaround_time(0), average_respond_time(0);
     //           P:                res:                      q:
     // get<0>   burst time         completion/respond     name process
     // get<1>   arrival time       waiting                time
@@ -36,6 +36,7 @@ int main() {
         get<1>(res[min]) = time - get<1>(p[min]) - x[min];
         get<2>(res[min]) = time - get<1>(p[min]);
         get<0>(res[min]) = get<1>(res[min]);
+        average_respond_time += get<0>(res[min]);
         average_waiting_time += get<1>(res[min]);
         average_turnaround_time += get<2>(res[min]);
         ++count;
@@ -53,8 +54,9 @@ int main() {
     for (int i = 0; i < n; i++) {
         cout << i + 1 << "\t" << get<0>(res[i]) << "\t" << get<1>(res[i]) << "\t" << get<2>(res[i]) << "\n";
     }
-    cout << "Average_waiting_time " << average_waiting_time / n;
-    cout << "\nAverage_turnaround_time " << average_turnaround_time / n;
+    cout << "average_respond_time " << average_respond_time / n
+         << "\nAverage_waiting_time " << average_waiting_time / n
+         << "\nAverage_turnaround_time " << average_turnaround_time / n;
 
     return 0;
 }
