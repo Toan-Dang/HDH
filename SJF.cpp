@@ -18,7 +18,7 @@ int main() {
 	// get<2>   name process       turnaround
 	//////////////////////////////////////////////////////////////////////
 	for (int i = 0; i < n; i++) {
-		cout << "Nhap vao arrival time va burst time cua process thu " << i << " : ";
+		cout << "Nhap vao arrival time va burst time cua process thu " << i+1 << " : ";
 		cin >> a >> b;
 		m_time += b;
 		x[i] = b;
