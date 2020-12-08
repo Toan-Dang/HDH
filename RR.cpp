@@ -11,7 +11,7 @@ int main() {
     queue<pair<int, int>> q;
     vector<pair<int, int>> res;
     res.push_back({0, 0});
-    int a, b;
+    int a, b,flag(0);
     // a, first,get<0>: process name
     // b, second: burst time
     // get<1> time
@@ -28,7 +28,8 @@ int main() {
     // each process will allow run in quantium time
     // after excute the next process will be excute and the pre process will be enqueue
     // if it end before quantium time, the next process will be excute in this quantium time
-    for (int i = 0; i < totaltime;) {
+     for (int i = 0; i < totaltime;) {
+        flag = 0;
         if (q.front().second == 0)
             q.pop();
         p = q.front();
@@ -39,6 +40,7 @@ int main() {
                 q.pop();
                 res.push_back({p.first, i});
                 p = q.front();
+                flag = 1;
             }
         }
         if (q.size() == 1) {
@@ -46,7 +48,7 @@ int main() {
             q.pop();
             break;
         }
-        if (q.size()) {
+        if (q.size() && flag == 0) {
             q.push(p);
             res.push_back({p.first, i});
             q.pop();
