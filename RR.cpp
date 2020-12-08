@@ -57,13 +57,14 @@ int main() {
     for (auto it : res) {
         cout << get<0>(it) << "\t" << get<1>(it) << "\n";
     }
-    double average_waiting_time(0), average_turnaround_time(0);
+    double average_waiting_time(0), average_turnaround_time(0), average_respond_time(0);
     cout << "processor_name\tstart_processor_time\tstop_processor_time\n";
     for (int i = 1; i <= n; i++) {
         //start time
         for (int j = 0; j < res.size(); j++) {
             if (get<0>(res[j]) == i) {
                 cout << i << "\t" << get<1>(res[j - 1]) << "\t";
+                average_respond_time += get<1>(res[j - 1]);
                 break;
             }
         }
@@ -94,8 +95,9 @@ int main() {
             break;
         }
     }
-    cout << "average_waiting_time: " << average_waiting_time / n
-         << "\naverage_turnaround_time: " << average_turnaround_time / n;
+    cout << "Average_respond_time: " << average_respond_time / n
+         << "\nAverage_waiting_time: " << average_waiting_time / n
+         << "\nAverage_turnaround_time: " << average_turnaround_time / n;
 
     return 0;
 }
