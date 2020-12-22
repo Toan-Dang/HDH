@@ -25,9 +25,7 @@ int main() {
         totaltime += b;
         q.push({a, b});
     }
-    // each process will allow run in quantium time
-    // after excute the next process will be excute and the pre process will be enqueue
-    // if it end before quantium time, the next process will be excute in this quantium time
+ 
      for (int i = 0; i < totaltime;) {
         flag = 0;
         if (q.front().second == 0)
