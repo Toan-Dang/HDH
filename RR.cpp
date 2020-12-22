@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <queue>
 #include <tuple>
@@ -6,18 +7,20 @@
 using namespace std;
 int main() {
     int n, qtime, totaltime(0);
-    cout << "Nhap so luong process va quantium time: ";
-    cin >> n >> qtime;
+    pair<int, int> p;
     queue<pair<int, int>> q;
     vector<pair<int, int>> res;
     res.push_back({0, 0});
-    int a, b,flag(0);
-    // a, first,get<0>: process name
-    // b, second: burst time
-    // get<1> time
-    ////////////////////////////////////////////
-    // asume all arrival time = 0 then input only brust time
-    pair<int, int> p;
+    int a, b, flag;
+// first,get<0>: process name
+// second: burst time
+// get<1> time
+////////////////////////////////////////////
+// asume all arrival time = 0 then input only brust time
+#pragma region input
+
+    cout << "Nhap so luong process va quantium time: ";
+    cin >> n >> qtime;
     for (int i = 0; i < n; i++) {
         cout << "Nhap brust time cua process thu " << i + 1 << " : ";
         cin >> b;
@@ -25,8 +28,23 @@ int main() {
         totaltime += b;
         q.push({a, b});
     }
- 
-     for (int i = 0; i < totaltime;) {
+
+#pragma endregion
+#pragma region file input
+/*
+    ifstream input;
+    input.open("rrinput.txt");
+    input >> n >> qtime;
+    for (int i = 0; i < n; i++) {
+        input >> b;
+        a = i + 1;
+        totaltime += b;
+        q.push({a, b});
+    }
+    input.close();
+*/
+#pragma endregion
+    for (int i = 0; i < totaltime;) {
         flag = 0;
         if (q.front().second == 0)
             q.pop();
@@ -39,8 +57,10 @@ int main() {
                 res.push_back({p.first, i});
                 p = q.front();
                 flag = 1;
+                break;
             }
         }
+
         if (q.size() == 1) {
             res.push_back({p.first, totaltime});
             q.pop();
@@ -52,6 +72,7 @@ int main() {
             q.pop();
         }
     }
+#pragma region OUTPUT
     /////////////////////OUT PUT//////////////////////
     cout << "GANTT\nPROCESS\tTIME\n";
     for (auto it : res) {
@@ -98,6 +119,6 @@ int main() {
     cout << "Average_respond_time: " << average_respond_time / n
          << "\nAverage_waiting_time: " << average_waiting_time / n
          << "\nAverage_turnaround_time: " << average_turnaround_time / n;
-
+#pragma endregion
     return 0;
 }
